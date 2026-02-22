@@ -4,15 +4,21 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+
+import co.edu.unbosque.model.Administrador;
+import co.edu.unbosque.model.ModelFacade;
 import co.edu.unbosque.view.PanelViajeCard;
 import co.edu.unbosque.view.ViewFacade;
 
 public class Controller implements ActionListener {
 
 	private ViewFacade vf;
+	private ModelFacade mf;
+
 
 	public Controller() {
 		vf = new ViewFacade();
+		mf = new ModelFacade();
 	}
 
 	public void run() {
@@ -87,7 +93,18 @@ public class Controller implements ActionListener {
 			break;
 
 		case "login":
-			vf.getVp().mostrarPanel(vf.getVp().getPanelAdminVia());
+			String user = vf.getVp().getPanelLogin().getUsuario().getText();
+			String contrasenia = new String(vf.getVp().getPanelLogin().getContrasenia().getPassword());
+
+			Administrador adminLogueado = mf.verificarLoginAdmin(user, contrasenia);
+
+			if (adminLogueado != null) {
+				JOptionPane.showMessageDialog(null, "Acceso concedido como Administrador");
+				vf.getVp().mostrarPanel(vf.getVp().getPanelAdminVia());
+			} else {
+				JOptionPane.showMessageDialog(null, "Usuario o contraseña incorrectos", "Error de Login",
+						JOptionPane.ERROR_MESSAGE);
+			}
 			break;
 
 		case "registrarUsuario":
